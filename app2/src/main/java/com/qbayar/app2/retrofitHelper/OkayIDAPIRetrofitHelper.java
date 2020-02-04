@@ -9,7 +9,7 @@ import retrofit2.Callback;
 public class OkayIDAPIRetrofitHelper {
     private OkayIDAPI api() {
         return RetrofitHelper
-                .getRetrofit("https://okaydocdemo.innov8tif.com/ekyc/api/v1/ocr/")
+                .getRetrofit("https://okaydocdemo.innov8tif.com/ekyc/api/v1/")
                 .create(OkayIDAPI.class);
     }
 
