@@ -1,26 +1,23 @@
-package com.qbayar.ekyc;
+package com.qbayar.app2.apiTest;
 
-import android.os.Bundle;
 import android.util.Log;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.gson.Gson;
+import com.qbayar.app2.model.MyResponse;
 import com.qbayar.app2.model.OkayID;
 import com.qbayar.app2.retrofitHelper.OkayIDAPIRetrofitHelper;
+
+import org.junit.Test;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
-    private static final String TAG = MainActivity.class.getSimpleName();
+public class OkayIDAPITest {
+    private static final String TAG = OkayIDAPITest.class.getSimpleName();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+    @Test(timeout = 10000)
+    public void post() {
         OkayID okayID = new OkayID();
         okayID.setApiKey("Ba0UkW6l1LJWuevMJn9gpBLajRqaA5Nx");
         okayID.setImageEnabled(true);
@@ -29,15 +26,15 @@ public class MainActivity extends AppCompatActivity {
 
         OkayIDAPIRetrofitHelper okayIDAPIRetrofitHelper = new OkayIDAPIRetrofitHelper();
         okayIDAPIRetrofitHelper.post(okayID,
-                new Callback<String>() {
+                new Callback<MyResponse>() {
                     @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
+                    public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                         Log.d(TAG, "onResponse() : call : " + new Gson().toJson(call));
                         Log.d(TAG, "onResponse() : response : " + new Gson().toJson(response));
                     }
 
                     @Override
-                    public void onFailure(Call<String> call, Throwable t) {
+                    public void onFailure(Call<MyResponse> call, Throwable t) {
                         Log.d(TAG, "onFailure() : call : " + new Gson().toJson(call));
                         Log.e(TAG, "onFailure() : fail", t);
                     }
