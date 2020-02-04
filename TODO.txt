@@ -1,0 +1,12 @@
+EKYC
+----
+
+TODO
+----
+1. Create a new android project (java/kotlin need to confirm).
+2. Add new module.
+3. Add retrofit to do network call.
+4. Add api and api helper for OkayID, OkayFace and OkayDoc.
+5. Design UI.
+6. Connect UI and api using some design pattern (may be no need).
+7. 

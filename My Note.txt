@@ -1,0 +1,18 @@
+E-KYC (Library)
+***************
+
+First Task
+==========
+Feature
+-------
+- To scan Identity Cards or even Facial recognition to register users to our system.
+- OkayID, OkayFace, OkayDoc
+
+To Do
+-----
+- Write a module that can be easily pluck into any existing Android project(min Android 4.0) to use EKYC features.
+
+------------------
+Previously I used 
+------------------
+com.qbayar.app2
