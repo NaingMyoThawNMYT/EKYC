@@ -3,11 +3,9 @@ package com.qbayar.app2.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
 import java.util.List;
 
-public class PFieldMap implements Serializable {
-
+public class PFieldMap {
     @SerializedName("wLCID")
     @Expose
     private double wLCID;

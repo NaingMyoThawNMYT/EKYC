@@ -12,22 +12,19 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.qbayar.app2.callback.OkayIDPostAPICallback;
+import com.qbayar.app2.model.OkayIDResponse;
 import com.qbayar.app2.model.OkayID;
 import com.qbayar.app2.retrofitHelper.OkayIDAPIRetrofitHelper;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -123,16 +120,15 @@ public class MainActivity extends AppCompatActivity {
 
         OkayIDAPIRetrofitHelper okayIDAPIRetrofitHelper = new OkayIDAPIRetrofitHelper();
         okayIDAPIRetrofitHelper.post(okayID,
-                new Callback<String>() {
+                new OkayIDPostAPICallback() {
                     @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-                        Log.d(TAG, "onResponse() : response = " + response.raw());
-                        Toast.makeText(MainActivity.this, "Yay", Toast.LENGTH_SHORT).show();
+                    public void onResponse(OkayIDResponse okayIDResponse) {
+                        Log.d(TAG, "onResponse() : okayIDResponse.result = " + (okayIDResponse.getResult() == null));
                     }
 
                     @Override
-                    public void onFailure(Call<String> call, Throwable t) {
-                        Log.e(TAG, "onFailure() : fail", t);
+                    public void onFailure(Throwable t) {
+                        Log.d(TAG, "onFailure()", t);
                     }
                 });
     }
