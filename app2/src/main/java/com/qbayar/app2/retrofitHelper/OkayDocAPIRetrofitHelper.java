@@ -19,12 +19,12 @@ public class OkayDocAPIRetrofitHelper {
     }
 
     public static void postMyKad(OkayDocMyKad okayDocMyKad, final OkayDocMyKadPostAPICallback callback) {
-        Gson gson = new Gson();
-        api().postMyKad(gson.toJson(okayDocMyKad))
+        final Gson gson = new Gson();
+        api().postOkayDoc("ekyc/v5/doc-verify/mykad", gson.toJson(okayDocMyKad))
                 .enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
-                        callback.onResponse(new Gson().fromJson(response.body(), OkayDocMyKadResponse.class));
+                        callback.onResponse(gson.fromJson(response.body(), OkayDocMyKadResponse.class));
                     }
 
                     @Override

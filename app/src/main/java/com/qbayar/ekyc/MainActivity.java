@@ -134,9 +134,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void postOkayIDAPI(String base64ImageString) {
         OkayID okayID = new OkayID();
         okayID.setApiKey("Ba0UkW6l1LJWuevMJn9gpBLajRqaA5Nx");
+        okayID.setBase64ImageString(base64ImageString);
+
+        // following are optional
         okayID.setImageEnabled(true);
         okayID.setImageFormat(".jpg");
-        okayID.setBase64ImageString(base64ImageString);
 
         OkayIDAPIRetrofitHelper.post(okayID,
                 new OkayIDPostAPICallback() {
@@ -156,6 +158,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         OkayDocMyKad okayDocMyKad = new OkayDocMyKad();
         okayDocMyKad.setApiKey("Ba0UkW6l1LJWuevMJn9gpBLajRqaA5Nx");
         okayDocMyKad.setIdImageBase64Image(base64ImageString);
+
+        // following are optional
         okayDocMyKad.setPhotoSubstitutionCheck(true);
         okayDocMyKad.setEdgeDetection(true);
         okayDocMyKad.setFontCheck(true);
