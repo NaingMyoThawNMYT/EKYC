@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -22,8 +23,8 @@ import com.qbayar.app2.callback.OkayDocMyKadPostAPICallback;
 import com.qbayar.app2.callback.OkayIDPostAPICallback;
 import com.qbayar.app2.model.OkayDocMyKad;
 import com.qbayar.app2.model.OkayDocMyKadResponse;
-import com.qbayar.app2.model.OkayIDResponse;
 import com.qbayar.app2.model.OkayID;
+import com.qbayar.app2.model.OkayIDResponse;
 import com.qbayar.app2.retrofitHelper.OkayDocAPIRetrofitHelper;
 import com.qbayar.app2.retrofitHelper.OkayIDAPIRetrofitHelper;
 
@@ -31,12 +32,14 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final int PERMISSION_REQUEST_CODE = 34434;
-    private static final int PICK_IMAGE_REQUEST_CODE = 5656;
+    private static final int PICK_IMAGE_REQUEST_CODE_FOR_OKAY_ID = 5656;
+    private static final int PICK_IMAGE_REQUEST_CODE_FOR_OKAY_DOC_MY_KAD = 7733;
 
+    private Button btnOkayId, btnOkayDocMyKad;
     private ImageView imageView;
 
     @Override
@@ -44,7 +47,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        btnOkayId = findViewById(R.id.btn_okay_id);
+        btnOkayDocMyKad = findViewById(R.id.btn_okay_doc_my_kad);
         imageView = findViewById(R.id.img_v);
+
+        btnOkayId.setOnClickListener(this);
+        btnOkayDocMyKad.setOnClickListener(this);
 
         requestPermission();
     }
@@ -69,36 +77,42 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PICK_IMAGE_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                Uri imageUri = data.getData();
+        if (resultCode == Activity.RESULT_OK) {
+            Uri imageUri = data.getData();
 
-                if (imageUri == null) {
-                    Log.d(TAG, "onActivityResult() : imageUri is null");
-                    return;
-                }
-
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                Cursor cursor = getContentResolver().query(imageUri, filePathColumn, null, null, null);
-
-                if (cursor == null) {
-                    Log.d(TAG, "onActivityResult() : cursor is null");
-                    return;
-                }
-
-                cursor.moveToFirst();
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                String imgDecodableString = cursor.getString(columnIndex);
-                cursor.close();
-                Bitmap bitmap = BitmapFactory.decodeFile(imgDecodableString);
-
-                imageView.setImageBitmap(bitmap);
-
-//                postOkayIDAPI(bitmapToBase64String(bitmap));
-                postOkayDocMyKad(bitmapToBase64String(bitmap));
-            } else {
-                Log.d(TAG, "onActivityResult() : fail to choose image");
+            if (imageUri == null) {
+                Log.d(TAG, "onActivityResult() : imageUri is null");
+                return;
             }
+
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getContentResolver().query(imageUri, filePathColumn, null, null, null);
+
+            if (cursor == null) {
+                Log.d(TAG, "onActivityResult() : cursor is null");
+                return;
+            }
+
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String imgDecodableString = cursor.getString(columnIndex);
+            cursor.close();
+            Bitmap bitmap = BitmapFactory.decodeFile(imgDecodableString);
+
+            imageView.setImageBitmap(bitmap);
+
+            switch (requestCode) {
+                case PICK_IMAGE_REQUEST_CODE_FOR_OKAY_ID: {
+                    postOkayIDAPI(bitmapToBase64String(bitmap));
+                    break;
+                }
+                case PICK_IMAGE_REQUEST_CODE_FOR_OKAY_DOC_MY_KAD: {
+                    postOkayDocMyKad(bitmapToBase64String(bitmap));
+                    break;
+                }
+            }
+        } else {
+            Log.d(TAG, "onActivityResult() : fail to choose image");
         }
     }
 
@@ -110,11 +124,11 @@ public class MainActivity extends AppCompatActivity {
         return Base64.encodeToString(b, Base64.DEFAULT).replaceAll("\n", "");
     }
 
-    public void showImageChooser(View v) {
+    public void showImageChooser(int requestCode) {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST_CODE);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), requestCode);
     }
 
     private void postOkayIDAPI(String base64ImageString) {
@@ -163,5 +177,19 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "postOkayDocMyKad() : onFailure", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_okay_id: {
+                showImageChooser(PICK_IMAGE_REQUEST_CODE_FOR_OKAY_ID);
+                break;
+            }
+            case R.id.btn_okay_doc_my_kad: {
+                showImageChooser(PICK_IMAGE_REQUEST_CODE_FOR_OKAY_DOC_MY_KAD);
+                break;
+            }
+        }
     }
 }
