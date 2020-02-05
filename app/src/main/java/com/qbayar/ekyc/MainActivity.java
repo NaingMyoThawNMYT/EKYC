@@ -12,14 +12,19 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.qbayar.app2.callback.OkayDocMyKadPostAPICallback;
 import com.qbayar.app2.callback.OkayIDPostAPICallback;
+import com.qbayar.app2.model.OkayDocMyKad;
+import com.qbayar.app2.model.OkayDocMyKadResponse;
 import com.qbayar.app2.model.OkayIDResponse;
 import com.qbayar.app2.model.OkayID;
+import com.qbayar.app2.retrofitHelper.OkayDocAPIRetrofitHelper;
 import com.qbayar.app2.retrofitHelper.OkayIDAPIRetrofitHelper;
 
 import java.io.ByteArrayOutputStream;
@@ -89,7 +94,8 @@ public class MainActivity extends AppCompatActivity {
 
                 imageView.setImageBitmap(bitmap);
 
-                postOkayIDAPI(bitmapToBase64String(bitmap));
+//                postOkayIDAPI(bitmapToBase64String(bitmap));
+                postOkayDocMyKad(bitmapToBase64String(bitmap));
             } else {
                 Log.d(TAG, "onActivityResult() : fail to choose image");
             }
@@ -122,12 +128,39 @@ public class MainActivity extends AppCompatActivity {
                 new OkayIDPostAPICallback() {
                     @Override
                     public void onResponse(OkayIDResponse okayIDResponse) {
-                        Log.d(TAG, "onResponse() : okayIDResponse.result = " + (okayIDResponse.getResult() == null));
+                        Toast.makeText(MainActivity.this, "postOkayIDAPI() : onResponse", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onFailure(Throwable t) {
-                        Log.d(TAG, "onFailure()", t);
+                        Toast.makeText(MainActivity.this, "postOkayIDAPI() : onFailure", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void postOkayDocMyKad(String base64ImageString) {
+        OkayDocMyKad okayDocMyKad = new OkayDocMyKad();
+        okayDocMyKad.setApiKey("Ba0UkW6l1LJWuevMJn9gpBLajRqaA5Nx");
+        okayDocMyKad.setIdImageBase64Image(base64ImageString);
+        okayDocMyKad.setPhotoSubstitutionCheck(true);
+        okayDocMyKad.setEdgeDetection(true);
+        okayDocMyKad.setFontCheck(true);
+        okayDocMyKad.setHologram(true);
+        okayDocMyKad.setColorMode(true);
+        okayDocMyKad.setIcTypeCheck(true);
+        okayDocMyKad.setLandmarkCheck(true);
+        okayDocMyKad.setMicroprintCheck(true);
+
+        OkayDocAPIRetrofitHelper.postMyKad(okayDocMyKad,
+                new OkayDocMyKadPostAPICallback() {
+                    @Override
+                    public void onResponse(OkayDocMyKadResponse okayDocMyKadResponse) {
+                        Toast.makeText(MainActivity.this, "postOkayDocMyKad() : onResponse", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        Toast.makeText(MainActivity.this, "postOkayDocMyKad() : onFailure", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
