@@ -11,13 +11,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class OkayIDAPIRetrofitHelper {
-    private OkayIDAPI api() {
+
+    private static OkayIDAPI api() {
         return RetrofitHelper
                 .getRetrofit("https://okaydocdemo.innov8tif.com/ekyc/api/v1/")
                 .create(OkayIDAPI.class);
     }
 
-    public void post(final OkayID okayID, final OkayIDPostAPICallback callback) {
+    public static void post(final OkayID okayID, final OkayIDPostAPICallback callback) {
         final Gson gson = new Gson();
         api().post(gson.toJson(okayID))
                 .enqueue(new Callback<String>() {

@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
                 imageView.setImageBitmap(bitmap);
 
-                callAPI(bitmapToBase64String(bitmap));
+                postOkayIDAPI(bitmapToBase64String(bitmap));
             } else {
                 Log.d(TAG, "onActivityResult() : fail to choose image");
             }
@@ -111,15 +111,14 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST_CODE);
     }
 
-    private void callAPI(String base64ImageString) {
+    private void postOkayIDAPI(String base64ImageString) {
         OkayID okayID = new OkayID();
         okayID.setApiKey("Ba0UkW6l1LJWuevMJn9gpBLajRqaA5Nx");
         okayID.setImageEnabled(true);
         okayID.setImageFormat(".jpg");
         okayID.setBase64ImageString(base64ImageString);
 
-        OkayIDAPIRetrofitHelper okayIDAPIRetrofitHelper = new OkayIDAPIRetrofitHelper();
-        okayIDAPIRetrofitHelper.post(okayID,
+        OkayIDAPIRetrofitHelper.post(okayID,
                 new OkayIDPostAPICallback() {
                     @Override
                     public void onResponse(OkayIDResponse okayIDResponse) {
